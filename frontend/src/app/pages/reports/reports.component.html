@@ -1,0 +1,115 @@
+<div class="container mt-5">
+  <h2>Reports & Analytics</h2>
+  
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="btn-group mb-3" role="group">
+        <button type="button" class="btn btn-outline-primary" 
+          (click)="selectedReport = 'dashboard'; loadDashboardReport()"
+          [class.active]="selectedReport === 'dashboard'">Dashboard</button>
+        <button type="button" class="btn btn-outline-primary" 
+          (click)="selectedReport = 'revenue'; loadRevenueReport()"
+          [class.active]="selectedReport === 'revenue'">Revenue</button>
+        <button type="button" class="btn btn-outline-primary" 
+          (click)="selectedReport = 'occupancy'"
+          [class.active]="selectedReport === 'occupancy'">Occupancy</button>
+      </div>
+
+      <div class="export-buttons mb-3">
+        <button class="btn btn-success me-2" (click)="exportReport('pdf')">Export PDF</button>
+        <button class="btn btn-success" (click)="exportReport('excel')">Export Excel</button>
+      </div>
+
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border" role="status"></div>
+      </div>
+
+      <div *ngIf="!loading && selectedReport === 'dashboard'">
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <div class="card text-white bg-primary">
+              <div class="card-body">
+                <h6 class="card-title">Total Bookings</h6>
+                <h3>{{ reportData.totalBookings }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-success">
+              <div class="card-body">
+                <h6 class="card-title">Total Revenue</h6>
+                <h3>₨{{ reportData.totalRevenue }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-info">
+              <div class="card-body">
+                <h6 class="card-title">Active Schedules</h6>
+                <h3>{{ reportData.activeSchedules }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-white bg-warning">
+              <div class="card-body">
+                <h6 class="card-title">Occupancy Rate</h6>
+                <h3>{{ reportData.occupancyRate }}%</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Booking Ref</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let booking of reportData.recentBookings">
+                <td>{{ booking.ref }}</td>
+                <td>₨{{ booking.amount }}</td>
+                <td>{{ booking.date }}</td>
+                <td><span class="badge" [ngClass]="{ 'bg-success': booking.status === 'Confirmed', 'bg-warning': booking.status === 'Pending' }">{{ booking.status }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && selectedReport === 'revenue'">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <h6>Daily Revenue</h6>
+                <h3 class="text-success">₨{{ reportData.daily }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <h6>Monthly Revenue</h6>
+                <h3 class="text-success">₨{{ reportData.monthly }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body text-center">
+                <h6>Annual Revenue</h6>
+                <h3 class="text-success">₨{{ reportData.annual }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

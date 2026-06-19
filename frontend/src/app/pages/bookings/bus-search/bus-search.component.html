@@ -1,0 +1,75 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Search Buses</h2>
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="card p-4">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label for="source" class="form-label">From</label>
+            <select class="form-control" id="source" formControlName="source"
+              [ngClass]="{ 'is-invalid': f['source'].touched && f['source'].errors }">
+              <option value="">Select City</option>
+              <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+            </select>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="destination" class="form-label">To</label>
+            <select class="form-control" id="destination" formControlName="destination"
+              [ngClass]="{ 'is-invalid': f['destination'].touched && f['destination'].errors }">
+              <option value="">Select City</option>
+              <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+            </select>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" formControlName="date"
+              [ngClass]="{ 'is-invalid': f['date'].touched && f['date'].errors }">
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="passengers" class="form-label">Passengers</label>
+            <input type="number" class="form-control" id="passengers" formControlName="passengers"
+              [ngClass]="{ 'is-invalid': f['passengers'].touched && f['passengers'].errors }">
+          </div>
+          <div class="col-md-2 mb-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row mt-4" *ngIf="searched">
+    <div class="col-md-12">
+      <h3>Available Buses</h3>
+      <div *ngIf="buses.length === 0" class="alert alert-info">
+        No buses found for selected route and date
+      </div>
+      <div *ngFor="let bus of buses" class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <h5>{{ bus.busNo }}</h5>
+              <p class="text-muted">{{ bus.type }}</p>
+            </div>
+            <div class="col-md-3">
+              <p><strong>{{ bus.departure }}</strong> to <strong>{{ bus.arrival }}</strong></p>
+              <small>Duration: 10 hours</small>
+            </div>
+            <div class="col-md-2">
+              <p><strong>Available Seats:</strong> {{ bus.availableSeats }}</p>
+            </div>
+            <div class="col-md-2">
+              <p><strong>₨{{ bus.fare }}</strong></p>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-success" (click)="selectBus(bus)">Select</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
